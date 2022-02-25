@@ -5,11 +5,11 @@ namespace alcamo\uri;
 use alcamo\exception\{SyntaxError, UnknownNamespacePrefix};
 
 /**
- * @brief Factory for Uri objects
+ * @brief Factory for Uri objects from CURIEs
  *
  * @sa [CURIE Syntax](https://www.w3.org/TR/curie/)
  */
-class UriFactory
+class UriFromCurieFactory
 {
     /**
      * @brief Create from CURIE and prefix map.

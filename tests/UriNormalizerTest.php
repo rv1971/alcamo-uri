@@ -43,7 +43,7 @@ class UriNormalizerTest extends TestCase
 
     public function normalizeProvider()
     {
-        $testCases = [
+        $dataSets = [
             'no-realpath' => [
                 'file:///foo/bar/baz/qux',
                 GuzzleHttpUriNormalizer::PRESERVING_NORMALIZATIONS,
@@ -63,13 +63,13 @@ class UriNormalizerTest extends TestCase
         ];
 
         if (PHP_OS_FAMILY != 'Windows') {
-            $testCases['realpath'] = [
-                'file://' . __DIR__ . '/foobar/UriNormalizerTest.php',
+            $dataSets['realpath'] = [
+                'file://' . __DIR__ . '/foobar/tests/UriNormalizerTest.php',
                 null,
                 'file://' . __FILE__,
             ];
         }
 
-        return $testCases;
+        return $dataSets;
     }
 }

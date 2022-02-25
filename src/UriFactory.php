@@ -12,42 +12,6 @@ use alcamo\exception\{SyntaxError, UnknownNamespacePrefix};
 class UriFactory
 {
     /**
-     * @brief Create `file:///` URI from local path
-     *
-     * @param $path Local path.
-     *
-     * @param $noPrependScheme Unless this is true, prepend `file:///`.
-     *
-     * @param $osFamily OS Family, defaults to `PHP_OS_FAMILY`.
-     */
-    public function createFromFilesystemPath(
-        string $path,
-        ?bool $noPrependScheme = null,
-        ?string $osFamily = null
-    ): Uri {
-        if (($osFamily ?? PHP_OS_FAMILY) == 'Windows') {
-            // replace directory separator by slash
-            $uri = str_replace('\\', '/', $path);
-
-            // if path contains drive, prepend slash
-            if ($uri[1] == ':') {
-                $uri = "/$uri";
-            }
-        } else {
-            $uri = $path;
-        }
-
-        /* If $path is absolute, unless $noPrependScheme is true, prepend
-         * `file:`. Due to the way GuzzleHttp\Psr7\Uri parses and re-assembles
-         * URIs, `file:/` becomes `file:///` in __toString. */
-        if ($uri[0] == '/' && !$noPrependScheme) {
-            $uri = "file:$uri";
-        }
-
-        return new Uri($uri);
-    }
-
-    /**
      * @brief Create from CURIE and prefix map.
      *
      * @param $curie CURIE.

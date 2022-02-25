@@ -19,48 +19,6 @@ class UriFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider newFromFilesystemPathProvider
-     */
-    public function testNewFromFilesystemPath(
-        $path,
-        $noPrependScheme,
-        $osFamily,
-        $expectedUri
-    ) {
-        $uri = (new UriFactory())
-            ->createFromFilesystemPath($path, $noPrependScheme, $osFamily);
-
-        $this->assertEquals($expectedUri, (string)$uri);
-    }
-
-    public function newFromFilesystemPathProvider()
-    {
-        return [
-            'relative' => [
-                'foo/bar', true, 'Linux', 'foo/bar'
-            ],
-            'absolute' => [
-                '/foo/bar/baz', true, 'Linux', '/foo/bar/baz'
-            ],
-            'absolute-with-scheme' => [
-                '/foo/bar/baz', false, 'Linux', 'file:///foo/bar/baz'
-            ],
-            'win-relative' => [
-                'foo\\bar', true, 'Windows', 'foo/bar'
-            ],
-            'win-absolute' => [
-                '\\foo\\bar\\baz', true, 'Windows', '/foo/bar/baz'
-            ],
-            'win-absolute-with-drive' => [
-                'c:\\foo\\bar\\baz', true, 'Windows', '/c:/foo/bar/baz'
-            ],
-            'win-absolute-with-drive-and-scheme' => [
-                'c:\\foo\\bar\\baz', false, 'Windows', 'file:///c:/foo/bar/baz'
-            ],
-        ];
-    }
-
-    /**
      * @dataProvider newFromUriOrSafeCurieAndMapProvider
      */
     public function testNewFromUriOrSafeCurieAndMap(

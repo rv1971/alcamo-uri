@@ -42,7 +42,15 @@ class UriNormalizer
             && $uri->getScheme() == 'file'
             && $uri->getHost() == ''
         ) {
-            return $uri->withPath(realpath($uri->getPath()));
+            $fileUriFactory = new FileUriFactory();
+
+            return $uri->withPath(
+                $fileUriFactory->fsPath2FileUrlPath(
+                    realpath(
+                        $fileUriFactory->fileUrlPath2FsPath($uri->getPath())
+                    )
+                )
+            );
         }
 
         return $uri;

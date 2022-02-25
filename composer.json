@@ -1,5 +1,5 @@
 {
-    "name": "alcamo/json",
+    "name": "alcamo/uri",
     "description": "PSR7 URI library with particular support for file: URIs",
     "keywords": [ "uri", "psr7", "file" ],
     "license": "Apache-2.0",

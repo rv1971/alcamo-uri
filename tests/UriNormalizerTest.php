@@ -2,6 +2,7 @@
 
 namespace alcamo\uri;
 
+use alcamo\exception\FileNotFound;
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\UriNormalizer as GuzzleHttpUriNormalizer;
 
@@ -71,5 +72,18 @@ class UriNormalizerTest extends TestCase
         }
 
         return $dataSets;
+    }
+
+    public function testNormalizeException()
+    {
+        $this->expectException(FileNotFound::class);
+        $this->expectExceptionMessage(
+            'File "/foo" not found'
+        );
+
+        UriNormalizer::normalize(
+            new Uri('file:///foo'),
+            UriNormalizer::APPLY_REALPATH
+        );
     }
 }

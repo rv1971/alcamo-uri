@@ -2,6 +2,7 @@
 
 namespace alcamo\uri;
 
+use alcamo\exception\FileNotFound;
 use PHPUnit\Framework\TestCase;
 
 class FileUriFactoryTest extends TestCase
@@ -116,5 +117,17 @@ class FileUriFactoryTest extends TestCase
         }
 
         return $dataSets;
+    }
+
+    public function testCreateException()
+    {
+        $fileUriFactory = new FileUriFactory(null, true);
+
+        $this->expectException(FileNotFound::class);
+        $this->expectExceptionMessage(
+            'File "/foo" not found'
+        );
+
+        $fileUriFactory->create('/foo');
     }
 }

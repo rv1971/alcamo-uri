@@ -2,6 +2,7 @@
 
 namespace alcamo\uri;
 
+use alcamo\exception\FileNotFound;
 use GuzzleHttp\Psr7\UriNormalizer as GuzzleHttpUriNormalizer;
 use Psr\Http\Message\UriInterface;
 
@@ -44,13 +45,19 @@ class UriNormalizer
         ) {
             $fileUriFactory = new FileUriFactory();
 
-            return $uri->withPath(
-                $fileUriFactory->fsPath2FileUrlPath(
-                    realpath(
-                        $fileUriFactory->fileUrlPath2FsPath($uri->getPath())
-                    )
-                )
-            );
+            $path = $fileUriFactory->fileUrlPath2FsPath($uri->getPath());
+
+            $realpath = realpath($path);
+
+            if ($realpath === false) {
+                /** @throw FileNotFound if realpath() fails */
+                throw (new FileNotFound())->setMessageContext(
+                    [ 'filename' => $path ]
+                );
+            }
+
+            return
+                $uri->withPath($fileUriFactory->fsPath2FileUrlPath($realpath));
         }
 
         return $uri;

@@ -2,6 +2,8 @@
 
 namespace alcamo\uri;
 
+use alcamo\exception\FileNotFound;
+
 /**
  * @brief Factory for file: URIs
  *
@@ -96,9 +98,20 @@ class FileUriFactory
      */
     public function create(string $path): Uri
     {
-        $uri = $this->fsPath2FileUrlPath(
-            $this->applyRealpath_ ? realpath($path) : $path
-        );
+        if ($this->applyRealpath_) {
+            $realpath = realpath($path);
+
+            if ($realpath === false) {
+                /** @throw FileNotFound if realpath() fails */
+                throw (new FileNotFound())->setMessageContext(
+                    [ 'filename' => $path ]
+                );
+            }
+
+            $uri = $this->fsPath2FileUrlPath($realpath);
+        } else {
+            $uri = $this->fsPath2FileUrlPath($path);
+        }
 
         /* On systems supporting drive letters, the result of realpath()
          * does not start with a slash. */

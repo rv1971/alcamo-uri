@@ -8,7 +8,7 @@ change in the future.
 ## Class `UriNormalizer`
 
 Built on top of GuzzleHttp's `UriNormalizer` with the additional
-possibility to apply realpath() on local `file:` URIs.
+possibility to apply `realpath()` on local `file:` URIs.
 
 This makes it easy to check whether two `file:` URIs refer to the same
 physical local file.

@@ -8,6 +8,8 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * @brief Extended URI normalizer
+ *
+ * @date Last reviewed 2025-10-08
  */
 class UriNormalizer
 {
@@ -47,8 +49,12 @@ class UriNormalizer
     public const SORT_QUERY_PARAMETERS =
         GuzzleHttpUriNormalizer::SORT_QUERY_PARAMETERS;
 
-    /// Apply realpath() to local file:/// URIs
+    /// Apply realpath() to local file:// URIs
     public const APPLY_REALPATH = 0x8000;
+
+    /// Normalizations applied by default in normalize()
+    public const DEFAULT_NORMALIZATIONS =
+        self::PRESERVING_NORMALIZATIONS | self::APPLY_REALPATH;
 
     /**
      * @brief Extend GuzzleHttp::Psr7::UriNormalizer::normalize()
@@ -56,16 +62,14 @@ class UriNormalizer
      * @param $uri URI to normalize.
      *
      * @param $flags A bitmask of normalizations to apply, see class constants
-     * of GuzzleHttp\Psr7\UriNormalizer plus class constants in
-     * present class. Defaults to
-     * @ref PRESERVING_NORMALIZATIONS | @ref APPLY_REALPATH.
+     * of GuzzleHttp\Psr7\UriNormalizer plus class constants in present class.
      */
     public static function normalize(
         UriInterface $uri,
         ?int $flags = null
     ): UriInterface {
         if (!isset($flags)) {
-            $flags = self::PRESERVING_NORMALIZATIONS | self::APPLY_REALPATH;
+            $flags = static::DEFAULT_NORMALIZATIONS;
         }
 
         $uri = GuzzleHttpUriNormalizer::normalize($uri, $flags);

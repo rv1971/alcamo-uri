@@ -8,6 +8,8 @@ use alcamo\exception\{SyntaxError, UnknownNamespacePrefix};
  * @brief Factory for Uri objects from CURIEs
  *
  * @sa [CURIE Syntax](https://www.w3.org/TR/curie/)
+ *
+ * @date Last reviewed 2025-10-08
  */
 class UriFromCurieFactory
 {
@@ -35,8 +37,12 @@ class UriFromCurieFactory
         if (!isset($map[$a[0]])) {
             /** @throw alcamo::xml::exception::UnknownNamespacePrefix if the
              *  prefix is not found in the map. */
-            throw (new UnknownNamespacePrefix())
-                ->setMessageContext([ 'prefix' => $a[0] ]);
+            throw (new UnknownNamespacePrefix())->setMessageContext(
+                [
+                    'prefix' => $a[0],
+                    'inData' => $curie
+                ]
+            );
         }
 
         return new Uri($map[$a[0]] . $a[1]);
@@ -141,8 +147,15 @@ class UriFromCurieFactory
         if (!isset($nsName)) {
             /** @throw alcamo::xml::exception::UnknownNamespacePrefix if the
              *  prefix cannot be resolved. */
-            throw (new UnknownNamespacePrefix())
-                ->setMessageContext([ 'prefix' => $a[0] ]);
+            throw (new UnknownNamespacePrefix())->setMessageContext(
+                [
+                    'prefix' => $a[0],
+                    'inData' => $curie,
+                    'atUri' => $context->documentURI
+                        ?? $context->ownerDocument->documentURI,
+                    'atLine' => $context->getLineNo()
+                ]
+            );
         }
 
         return new Uri($nsName . $a[1]);

@@ -20,6 +20,8 @@ use alcamo\exception\FileNotFound;
  * to create URIs from paths that do not reside on the local platform.
  *
  * @sa [RFC 8089](https://datatracker.ietf.org/doc/html/rfc8089)
+ *
+ * @date Last reviewed 2025-10-08
  */
 class FileUriFactory
 {
@@ -38,7 +40,6 @@ class FileUriFactory
         ?bool $applyRealpath = null
     ) {
         $this->directorySeparator_ = $directorySeparator ?? DIRECTORY_SEPARATOR;
-
         $this->applyRealpath_ = $applyRealpath ?? true;
     }
 
@@ -89,12 +90,12 @@ class FileUriFactory
     }
 
     /**
-     * @brief Create absolute `file:///` URI from local filesystem path
+     * @brief Create absolute `file://` URI from local filesystem path
      *
      * @param $path Local path.
      *
      * @warning If @ref $applyRealPath_ is not set, the path is expected to be
-     * an sbolute path, but this is not checked.
+     * an absolute path, but this is not checked.
      */
     public function create(string $path): Uri
     {

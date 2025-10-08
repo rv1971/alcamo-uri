@@ -8,6 +8,8 @@ namespace alcamo\uri;
  * @warning If the constructor is called with an instance of FileUriFactory()
  * that does not apply realpath(), this class does not check whether the
  * elements supplied by the inner iterator are legal paths.
+ *
+ * @date Last reviewed 2025-10-08
  */
 class FsPath2FileUrlIterator extends \IteratorIterator
 {

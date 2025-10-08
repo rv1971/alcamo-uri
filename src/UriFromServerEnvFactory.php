@@ -2,14 +2,18 @@
 
 namespace alcamo\uri;
 
+/**
+ * @brief Create an URI from $_SERVER.
+ *
+ * @date Last reviewed 2025-10-08
+ */
 class UriFromServerEnvFactory
 {
     /**
-     * @brief In createFromServerParams(), use HTTP_HOST rather than
-     * SERVER_NAME
+     * @brief In create(), use HTTP_HOST rather than SERVER_NAME
      *
-     * HTTP_HOST is client-contolled so it probably reflects what the user
-     * sees in the web browser, while SERVER_NAME is server-controlled and
+     * `HTTP_HOST` is client-contolled so it probably reflects what the user
+     * sees in the web browser, while `SERVER_NAME` is server-controlled and
      * thus is not subject to user manipulation, provided the server is
      * correctly configured.
      *
@@ -24,17 +28,20 @@ class UriFromServerEnvFactory
         $this->flags_ = (int)$flags;
     }
 
-    /// Create from server environment information such as $_SERVER
+    /**
+     * @brief Create from server environment information such as $_SERVER
+     *
+     * @sa https://stackoverflow.com/questions/6768793/get-the-full-url-in-php
+     */
     public function create(array $server): Uri
     {
-        /// @sa https://stackoverflow.com/questions/6768793/get-the-full-url-in-php
         return new Uri(
             (isset($server['HTTPS']) ? 'https://' : 'http://')
-            . ($this->flags_ & self::USE_HTTP_HOST
-               ? $server['HTTP_HOST']
-               : $server['SERVER_NAME'])
-            . ":{$server['SERVER_PORT']}"
-            . $server['REQUEST_URI']
+                . ($this->flags_ & self::USE_HTTP_HOST
+                   ? $server['HTTP_HOST']
+                   : $server['SERVER_NAME'])
+                . ":{$server['SERVER_PORT']}"
+                . $server['REQUEST_URI']
         );
     }
 }

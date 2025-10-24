@@ -25,8 +25,8 @@ use alcamo\exception\FileNotFound;
  */
 class FileUriFactory
 {
-    private $directorySeparator_;
-    private $applyRealpath_;
+    private $directorySeparator_; ///< string
+    private $applyRealpath_;      ///< bool
 
     /**
      * @param $directorySeparator Directory separator. Default
@@ -43,11 +43,13 @@ class FileUriFactory
         $this->applyRealpath_ = $applyRealpath ?? true;
     }
 
+    /// Directory separator used for filesystem paths
     public function getDirectorySeparator(): string
     {
         return $this->directorySeparator_;
     }
 
+    /// Whether to apply realpath()
     public function getApplyRealpath(): bool
     {
         return $this->applyRealpath_;

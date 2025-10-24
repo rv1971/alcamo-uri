@@ -3,7 +3,7 @@
 namespace alcamo\uri;
 
 /**
- * @brief Convert paths to file: URLs
+ * @brief Convert filesystem paths to file: URLs
  *
  * @warning If the constructor is called with an instance of FileUriFactory()
  * that does not apply realpath(), this class does not check whether the

@@ -2,7 +2,7 @@
 
 namespace alcamo\uri;
 
-use alcamo\exception\FileNotFound;
+use alcamo\exception\{FileNotFound, Unsupported};
 use PHPUnit\Framework\TestCase;
 
 class FileUriFactoryTest extends TestCase
@@ -23,6 +23,14 @@ class FileUriFactoryTest extends TestCase
         if (PHP_OS_FAMILY != 'Windows') {
             system('rm ' . __DIR__ . '/foobar');
         }
+    }
+
+    public function testConstructorException()
+    {
+        $this->expectException(Unsupported::class);
+        $this->expectExceptionMessage('use of realpath() with directory');
+
+        new FileUriFactory('.', true);
     }
 
     /**
@@ -103,8 +111,24 @@ class FileUriFactoryTest extends TestCase
     {
         $dataSets = [
             [ '/', false, '/foo/b$r', 'file:///foo/b%24r' ],
+            [ '/', false, '/foo/b$r/', 'file:///foo/b%24r/' ],
             [ '/', false, 'c:/f==/bar', 'file:///c:/f%3D%3D/bar' ],
             [ '\\', false, 'c:\\foo\\bar', 'file:///c:/foo/bar' ],
+            [
+                DIRECTORY_SEPARATOR,
+                true,
+                __FILE__,
+                'file:///'
+                . ltrim(strtr(__FILE__, DIRECTORY_SEPARATOR, '/'), '/')
+            ],
+            [
+                DIRECTORY_SEPARATOR,
+                true,
+                __DIR__ . DIRECTORY_SEPARATOR,
+                'file:///'
+                . ltrim(strtr(__DIR__, DIRECTORY_SEPARATOR, '/'), '/')
+                . DIRECTORY_SEPARATOR
+            ]
         ];
 
         if (PHP_OS_FAMILY != 'Windows') {

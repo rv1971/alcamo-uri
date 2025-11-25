@@ -2,7 +2,7 @@
 
 namespace alcamo\uri;
 
-use alcamo\exception\FileNotFound;
+use alcamo\exception\{FileNotFound, Unsupported};
 
 /**
  * @brief Factory for file: URIs
@@ -33,14 +33,34 @@ class FileUriFactory
      * `DIRECTORY_SEPARATOR`.
      *
      * @param $applyRealpath Whether to apply realpath() in create(). Default
-     * `true`.
+     * `true` iff $directorySeparator is the actual directory separator of the
+     * host system.
      */
     public function __construct(
         ?string $directorySeparator = null,
         ?bool $applyRealpath = null
     ) {
+        if (
+            $applyRealpath
+                && isset($directorySeparator)
+                && $directorySeparator != DIRECTORY_SEPARATOR
+        ) {
+            /**
+             * @throw alcamo::exception::Unsupported when attempting to create
+             * a factory that should apply realpath() but with a directory
+             * separator of a different platform.
+             */
+            throw (new Unsupported())->setMessageContext(
+                [
+                    'feature' =>
+                        'use of realpath() with directory separator of different platform'
+                ]
+            );
+        }
+
         $this->directorySeparator_ = $directorySeparator ?? DIRECTORY_SEPARATOR;
-        $this->applyRealpath_ = $applyRealpath ?? true;
+        $this->applyRealpath_ = $applyRealpath ??
+            ($this->directorySeparator_ == DIRECTORY_SEPARATOR);
     }
 
     /// Directory separator used for filesystem paths
@@ -103,6 +123,12 @@ class FileUriFactory
     {
         if ($this->applyRealpath_) {
             $realpath = realpath($path);
+
+            /* realpath() strips any trailing directory separators, hence it
+             * must be appended again if there was one. */
+            if ($path[-1] == $this->directorySeparator_) {
+                $realpath .= $this->directorySeparator_;
+            }
 
             if ($realpath === false) {
                 /** @throw FileNotFound if realpath() fails */

@@ -14,6 +14,41 @@ use alcamo\exception\{SyntaxError, UnknownNamespacePrefix};
 class UriFromCurieFactory
 {
     /**
+     * @brief Create from namespace name and local name
+     *
+     * According to the specification, this would simply be the concatenation
+     * of namespace name and local name. But there is an inconsistency with
+     * XMLSchema because the namespace name of XMLSchema is
+     * `http://www.w3.org/2001/XMLSchema` while URIs to XMLSchema types are
+     * built by prepending `http://www.w3.org/2001/XMLSchema#`. Hence the
+     * definiton needed for the `xsd` prefix for CURIEs purposes differs from
+     * the definition of needed for the `xsd` prefix for QNames. As a
+     * pragmatic and somewhat generic solution, this method inserts a `#`
+     * between namespace name and local name if the former ends with an
+     * alphanumeric character and the latter starts with an alphanumeric
+     * character.
+     *
+     * @note Hence `http://example.org` and `123` will be result in
+     * `http://example.org#123` rather than `http://example.org123`. However,
+     * it seems highly unlikely that the latter is the desired result.
+     *
+     * @sa [CURIE Syntax 1.0](https://www.w3.org/TR/curie/)
+     * @sa [XML Schema Built-in Datatypes](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes)
+     */
+    public function createFromNsNameAndLocalName(
+        ?string $nsName,
+        string $localName
+    ): Uri {
+        return isset($nsName)
+            ? new Uri(
+                ctype_alnum($nsName[-1]) && ctype_alnum($localName[0])
+                    ? "$nsName#$localName"
+                    : "$nsName$localName"
+            )
+            : new Uri($localName);
+    }
+
+    /**
      * @brief Create from CURIE and prefix map.
      *
      * @param $curie CURIE.
@@ -31,7 +66,10 @@ class UriFromCurieFactory
         $a = explode(':', $curie, 2);
 
         if (!isset($a[1]) || $a[0] == '') {
-            return new Uri($defaultPrefixValue . $curie);
+            return $this->createFromNsNameAndLocalName(
+                $defaultPrefixValue,
+                $curie
+            );
         }
 
         if (!isset($map[$a[0]])) {
@@ -45,7 +83,7 @@ class UriFromCurieFactory
             );
         }
 
-        return new Uri($map[$a[0]] . $a[1]);
+        return $this->createFromNsNameAndLocalName($map[$a[0]], $a[1]);
     }
 
     /**
@@ -136,9 +174,9 @@ class UriFromCurieFactory
         $a = explode(':', $curie, 2);
 
         if (!isset($a[1]) || $a[0] == '') {
-            return new Uri(
-                ($defaultPrefixValue ?? $context->lookupNamespaceUri(null))
-                . $curie
+            return $this->createFromNsNameAndLocalName(
+                ($defaultPrefixValue ?? $context->lookupNamespaceUri(null)),
+                $curie
             );
         }
 
@@ -158,7 +196,7 @@ class UriFromCurieFactory
             );
         }
 
-        return new Uri($nsName . $a[1]);
+        return $this->createFromNsNameAndLocalName($nsName, $a[1]);
     }
 
     /**
@@ -228,6 +266,6 @@ class UriFromCurieFactory
                 $context,
                 $defaultPrefixValue
             )
-            : new Uri($uriOrSafeCurie, null);
+            : new Uri($uriOrSafeCurie);
     }
 }

@@ -56,6 +56,12 @@ class UriFromCurieFactoryTest extends TestCase
                 'http://baz.example.info',
                 'http://foo.example.org/quux'
             ],
+            'curie-with-special-rule' => [
+                '[bar:corge]',
+                $map,
+                'http://bar.example.org',
+                'http://bar.example.org#corge'
+            ],
             'default-with-colon' => [
                 '[:?baz=42#QUUX]',
                 $map,

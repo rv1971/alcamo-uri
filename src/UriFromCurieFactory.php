@@ -21,19 +21,22 @@ class UriFromCurieFactory
      * XMLSchema because the namespace name of XMLSchema is
      * `http://www.w3.org/2001/XMLSchema` while URIs to XMLSchema types are
      * built by prepending `http://www.w3.org/2001/XMLSchema#`. Hence the
-     * definiton needed for the `xsd` prefix for CURIEs purposes differs from
-     * the definition of needed for the `xsd` prefix for QNames. As a
-     * pragmatic and somewhat generic solution, this method inserts a `#`
+     * definition needed for the `xsd` prefix for CURIE purposes differs from
+     * the definition needed for the `xsd` prefix for QNames. However, the
+     * examples in [RDFa 1.0](https://www.w3.org/TR/rdfa-syntax/) work as if
+     * the two where the same.
+     *
+     * As a pragmatic and somewhat generic solution, this method inserts a `#`
      * between namespace name and local name if the former ends with an
      * alphanumeric character and the latter starts with an alphanumeric
      * character.
      *
      * @note Hence `http://example.org` and `123` will be result in
-     * `http://example.org#123` rather than `http://example.org123`. However,
-     * it seems highly unlikely that the latter is the desired result.
+     * `http://example.org#123` rather than `http://example.org123`, in
+     * contrast to the CURIE Syntax specification. However, situations where
+     * the latter is the desired result seem rather unlikely.
      *
      * @sa [CURIE Syntax 1.0](https://www.w3.org/TR/curie/)
-     * @sa [XML Schema Built-in Datatypes](https://www.w3.org/TR/xmlschema11-2/#built-in-datatypes)
      */
     public function createFromNsNameAndLocalName(
         ?string $nsName,

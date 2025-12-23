@@ -34,9 +34,9 @@ class FileUriFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider fsPath2FileUrlPathProvider
+     * @dataProvider fsPath2FileUriPathProvider
      */
-    public function testFsPath2FileUrlPath(
+    public function testFsPath2FileUriPath(
         $directorySeparator,
         $path,
         $expectedPath
@@ -50,25 +50,25 @@ class FileUriFactoryTest extends TestCase
 
         $this->assertSame(
             $expectedPath,
-            $fileUriFactory->fsPath2FileUrlPath($path)
+            $fileUriFactory->fsPath2FileUriPath($path)
         );
 
         $this->assertSame(
             $path,
-            $fileUriFactory->fileUrlPath2FsPath(
-                $fileUriFactory->fsPath2FileUrlPath($path)
+            $fileUriFactory->fileUriPath2FsPath(
+                $fileUriFactory->fsPath2FileUriPath($path)
             )
         );
 
         $this->assertSame(
             $expectedPath,
-            $fileUriFactory->fsPath2FileUrlPath(
-                $fileUriFactory->fileUrlPath2FsPath($expectedPath)
+            $fileUriFactory->fsPath2FileUriPath(
+                $fileUriFactory->fileUriPath2FsPath($expectedPath)
             )
         );
     }
 
-    public function fsPath2FileUrlPathProvider()
+    public function fsPath2FileUriPathProvider()
     {
         return [
             [

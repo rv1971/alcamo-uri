@@ -4,7 +4,7 @@ namespace alcamo\uri;
 
 use PHPUnit\Framework\TestCase;
 
-class FsPath2FileUrlIteratorTest extends TestCase
+class FsPath2FileUriIteratorTest extends TestCase
 {
     /**
      * @dataProvider basicsProvider
@@ -15,7 +15,7 @@ class FsPath2FileUrlIteratorTest extends TestCase
             ? new FileUriFactory($directorySeparator, false)
             : null;
 
-        $iterator = new FsPath2FileUrlIterator(
+        $iterator = new FsPath2FileUriIterator(
             new \ArrayIterator($data),
             $fileUriFactory
         );

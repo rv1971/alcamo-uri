@@ -8,7 +8,7 @@ use alcamo\exception\{FileNotFound, Unsupported};
  * @brief Factory for file: URIs
  *
  * @warning None of the methods checks its argument for syntactical
- * correctness. For instance, on a windows system, fsPath2FileUrlPath() will
+ * correctness. For instance, on a windows system, fsPath2FileUriPath() will
  * silently convert `foo\\\\bar` to `foo////bar`.
  *
  * With default arguments, the constructor creates a factory appropriate to
@@ -87,7 +87,7 @@ class FileUriFactory
      * clearly prescribes a literal colon, colons MUST NOT be percent-encoded,
      * and therefore the present method does not percent-encode them.
      */
-    public function fsPath2FileUrlPath(string $path): string
+    public function fsPath2FileUriPath(string $path): string
     {
         return str_replace(
             '%3A',
@@ -103,7 +103,7 @@ class FileUriFactory
     }
 
     /// Convert a path for use in a file: URI to a local filesystem path
-    public function fileUrlPath2FsPath(string $path): string
+    public function fileUriPath2FsPath(string $path): string
     {
         return implode(
             $this->directorySeparator_,
@@ -137,9 +137,9 @@ class FileUriFactory
                 );
             }
 
-            $uri = $this->fsPath2FileUrlPath($realpath);
+            $uri = $this->fsPath2FileUriPath($realpath);
         } else {
-            $uri = $this->fsPath2FileUrlPath($path);
+            $uri = $this->fsPath2FileUriPath($path);
         }
 
         /* On systems supporting drive letters, the result of realpath()

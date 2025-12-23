@@ -3,7 +3,7 @@
 namespace alcamo\uri;
 
 /**
- * @brief Convert filesystem paths to file: URLs
+ * @brief Convert filesystem paths to file: URIs
  *
  * @warning If the constructor is called with an instance of FileUriFactory()
  * that does not apply realpath(), this class does not check whether the
@@ -11,7 +11,7 @@ namespace alcamo\uri;
  *
  * @date Last reviewed 2025-10-08
  */
-class FsPath2FileUrlIterator extends \IteratorIterator
+class FsPath2FileUriIterator extends \IteratorIterator
 {
     private $fileUriFactory_; ///< FileUriFactory
 

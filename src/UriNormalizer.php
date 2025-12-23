@@ -83,7 +83,7 @@ class UriNormalizer
         ) {
             $fileUriFactory = new FileUriFactory();
 
-            $path = $fileUriFactory->fileUrlPath2FsPath($uri->getPath());
+            $path = $fileUriFactory->fileUriPath2FsPath($uri->getPath());
 
             $realpath = realpath($path);
 
@@ -95,7 +95,7 @@ class UriNormalizer
             }
 
             return
-                $uri->withPath($fileUriFactory->fsPath2FileUrlPath($realpath));
+                $uri->withPath($fileUriFactory->fsPath2FileUriPath($realpath));
         }
 
         return $uri;
